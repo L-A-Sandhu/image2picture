@@ -12,9 +12,9 @@ import os
 # Pred_len = 4
 # path='../Dataset/wind_dataset.csv'
 
-def im2pic(path,Sample_len,Pred_len,OP):
+def im2pic(path,loc,Sample_len,Pred_len,OP):
     df = pd.read_csv(path, index_col=0)
-    X=df[df.columns[0]]
+    X=df[df.columns[loc]]
     X = X.to_numpy()
     for i in range(len(X)-(Sample_len+4)):
         # Image genration
@@ -49,12 +49,14 @@ def im2pic(path,Sample_len,Pred_len,OP):
 if __name__ == '__main__':
         parser = argparse.ArgumentParser(description=' Image to Picture Conversion ') 
         parser.add_argument("--csv_path", type= str , default='../Dataset/wind_dataset.csv', help='path to the')    
+        parser.add_argument("--col_num", type= int , default=0 , help="Coulm number of label intrested in such as wind is in coulm 0")
         parser.add_argument("--sample_len", type= int, default= 1000, help='input sample length')
         parser.add_argument("--label_len", type=int,default=4, help="prediction sample size")
         parser.add_argument("--out_path", type= str, default='../Dataset/', help="prediction sample size")
+        
         args = parser.parse_args()
         if not os.path.exists(args.out_path+'/images/'):
             os.makedirs(args.out_path+'/images/')
         if not os.path.exists(args.out_path+'/labels/'):
             os.makedirs(args.out_path+'/labels/')
-        im2pic(args.csv_path, args.sample_len, args.label_len, args.out_path)
+        im2pic(args.csv_path,args.col_num, args.sample_len, args.label_len, args.out_path)
